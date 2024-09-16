@@ -29,7 +29,7 @@ Requirements:
    
    f. Camera (Pi Camera)
    
-3. Software
+3. Software Dependencies
    
     a. Python 3
 
