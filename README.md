@@ -1,24 +1,25 @@
 # Car-with-Aruco-Marker-detection
 This project demonstrates real-time object detection using ArUco markers with a Flask-based web interface for controlling motors, a robotic arm, and aligning objects. The project utilizes a Raspberry Pi with a camera for image capture and processes the feed using Python, OpenCV, and Flask. Servo motors, a robotic arm, and DC motors are controlled via an Arduino over serial communication to facilitate movement, alignment with detected markers, and object manipulation using the robotic arm.
 
-Features:
+## Features:
 
-1.ArUco Marker Detection: Detects ArUco markers in real-time from a camera feed.
+1. ArUco Marker Detection: Detects ArUco markers in real-time from a camera feed.
 
-2.Distance Estimation: Estimates the distance of ArUco markers from the camera.
+2. Distance Estimation: Estimates the distance of ArUco markers from the camera.
 
-3.Motor Control: Controls motors to move a robot towards or align with detected markers.
+3. Motor Control: Controls motors to move a robot towards or align with detected markers.
 
-4.Real-time Video Feed: Streams live video from the Raspberry Pi camera to a web interface.
+4. Real-time Video Feed: Streams live video from the Raspberry Pi camera to a web interface.
 
-5.Flask Web Interface: Provides an interactive interface to control motor movements and trigger functions like marker alignment or stopping the robot.
+5. Flask Web Interface: Provides an interactive interface to control motor movements and trigger functions like marker alignment or stopping the robot.
 
-6.Failsafe Mechanism: Automatically stops the robot if the marker is lost from view.
+6. Failsafe Mechanism: Automatically stops the robot if the marker is lost from view.
 
 7. Robotic Arm: A mounted robotic arm controlled via servos that can be manipulated to pick up objects.
 
 ## Requirements:
 1. Hardware
+   
    a. Raspberry Pi 3B+
    
    b. Arduino UNO R3(for motor control)
