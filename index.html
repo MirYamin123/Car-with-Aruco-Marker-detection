@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Robot Control</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        #controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .motor-buttons {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+        .button-group {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+        .button {
+            padding: 10px 15px;
+            font-size: 14px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            width: 100px;
+            text-align: center;
+        }
+        .button:hover {
+            background-color: #45a049;
+        }
+        #video-feed {
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 640px;
+            margin: 0 auto;
+        }
+        #video-feed img {
+            width: 100%;
+            display: block;
+            border-radius: 8px;
+        }
+        .marker-info {
+            margin-top: 20px;
+            max-width: 640px;
+            margin: 0 auto;
+            text-align: left;
+        }
+        .marker-info h2 {
+            margin-bottom: 10px;
+        }
+        .marker-item {
+            background-color: #fff;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+        }
+        .marker-item .marker-status {
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .marker-item .go-button {
+            background-color: #ff5722;
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        .marker-item .align-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id="video-feed">
+        <img src="{{ url_for('video_feed') }}" alt="Video Feed">
+    </div>
+
+    <div class="marker-info" id="marker-info">
+        <h2>Detected Markers</h2>
+        <div id="marker-list"></div>
+    </div>
+
+    <div id="controls">
+        <!-- Motor Control Buttons -->
+        <div class="motor-buttons">
+            <div class="button-group">
+                <button class="button" onmousedown="sendCommand('F', 'press')" onmouseup="sendCommand('F', 'release')">↑ Forward</button>
+            </div>
+            <div class="button-group">
+                <button class="button" onmousedown="sendCommand('I', 'press')" onmouseup="sendCommand('I', 'release')">↗ Diagonal FR</button>
+                <button class="button" onmousedown="sendCommand('J', 'press')" onmouseup="sendCommand('J', 'release')">↖ Diagonal FL</button>
+            </div>
+            <div class="button-group">
+                <button class="button" onmousedown="sendCommand('G', 'press')" onmouseup="sendCommand('G', 'release')">↔ Strafe Left</button>
+                <button class="button" onmousedown="sendCommand('H', 'press')" onmouseup="sendCommand('H', 'release')">↔ Strafe Right</button>
+            </div>
+            <div class="button-group">
+                <button class="button" onmousedown="sendCommand('K', 'press')" onmouseup="sendCommand('K', 'release')">↙ Diagonal BR</button>
+                <button class="button" onmousedown="sendCommand('M', 'press')" onmouseup="sendCommand('M', 'release')">↘ Diagonal BL</button>
+            </div>
+            <div class="button-group">
+                <button class="button" onmousedown="sendCommand('B', 'press')" onmouseup="sendCommand('B', 'release')">↓ Backward</button>
+            </div>
+            <div class="button-group">
+                <button class="button" onmousedown="sendCommand('Z', 'press')" onmouseup="sendCommand('Z', 'release')">⟳ Spin CW</button>
+                <button class="button" onmousedown="sendCommand('X', 'press')" onmouseup="sendCommand('X', 'release')">⟲ Spin CCW</button>
+            </div>
+        </div>
+
+        <!-- Servo Control Buttons -->
+        <div class="servo-buttons">
+            <div>
+                <button class="button" onmousedown="sendCommand('A', 'press')">Servo 1 ↑</button>
+                <button class="button" onmousedown="sendCommand('a', 'press')">Servo 1 ↓</button>
+            </div>
+            <div>
+                <button class="button" onmousedown="sendCommand('E', 'press')">Servo 2 ↑</button>
+                <button class="button" onmousedown="sendCommand('e', 'press')">Servo 2 ↓</button>
+            </div>
+            <div>
+                <button class="button" onmousedown="sendCommand('C', 'press')">Servo 3 ↑</button>
+                <button class="button" onmousedown="sendCommand('c', 'press')">Servo 3 ↓</button>
+            </div>
+            <div>
+                <button class="button" onmousedown="sendCommand('L', 'press')">Servo 4 ↑</button>
+                <button class="button" onmousedown="sendCommand('l', 'press')">Servo 4 ↓</button>
+            </div>
+        </div>
+        <!-- Add a Stop Button in the marker-info section -->
+<div class="marker-item">
+    <button class="button" onclick="stopNearMarker()">Stop Going Near Marker</button>
+</div>
+
+<script>
+    // Function to emit the stop signal to stop moving near the marker
+    function stopNearMarker() {
+        socket.emit('stop_near_marker');
+    }
+
+    // Listen for stop signal confirmation
+    socket.on('stop_signal_received', function(data) {
+        alert(data.message);  // Notify the user that the stop command was received
+    });
+</script>
+
+        <!-- Scan and Abort Scan Buttons -->
+        <div class="scan-buttons">
+            <div class="button-group">
+                <button class="button" onclick="socket.emit('scan_area')">Scan Area</button>
+                <button class="button" onclick="socket.emit('abort_scan')">Abort Scan</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Container for scanning messages -->
+    <div id="scan-message"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js"></script>
+    <script>
+        const socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
+
+        function sendCommand(cmd, event) {
+            socket.emit('command', { command: cmd, event: event });
+        }
+
+        // Update marker information
+        function updateMarkerInfo() {
+            fetch('/marker_info')
+                .then(response => response.json())
+                .then(data => {
+                    const markerList = document.getElementById('marker-list');
+                    markerList.innerHTML = '';
+                    Object.keys(data).forEach(id => {
+                        const marker = data[id];
+                        const markerItem = document.createElement('div');
+                        markerItem.className = 'marker-item';
+                        markerItem.innerHTML = `
+                            <div class="marker-status">Marker ${id}: ${marker.status}</div>
+                            <div>Distance: ${marker.distance}</div>
+                            <div>Offset from center: ${marker.offset_from_center}</div>
+                            <button class="go-button" onclick="goNearMarker(${id})">Go Near Marker ${id}</button>
+                            <button class="align-button" onclick="alignWithMarker(${id})">Align with Marker ${id}</button>
+                            <button class="go-button" onclick="moveToDistance(${id}, 0.4)">Move to 0.4m</button>
+                        `;
+                        markerList.appendChild(markerItem);
+                    });
+                });
+        }
+
+        // Go near marker (align + move towards it)
+        function goNearMarker(id) {
+            socket.emit('go_near_marker', { marker_id: id });
+        }
+
+        // Align with marker
+        function alignWithMarker(id) {
+            socket.emit('align_with_marker', { marker_id: id });
+        }
+
+        // Move to a specific distance
+        function moveToDistance(id, distance) {
+            socket.emit('move_to_distance', { marker_id: id, distance: distance });
+        }
+
+        // Listen for marker detection messages
+        socket.on('marker_detected', function(data) {
+            const messageDiv = document.getElementById('scan-message');
+            messageDiv.innerHTML = `<p>${data.message}</p><button onclick="continueScanning()">Continue Scanning</button>`;
+        });
+
+        // Listen for scan complete messages
+        socket.on('scan_complete', function(data) {
+            const messageDiv = document.getElementById('scan-message');
+            messageDiv.innerHTML = `<p>${data.message}</p>`;
+        });
+
+        function continueScanning() {
+            socket.emit('continue_scan');
+        }
+
+        setInterval(updateMarkerInfo, 1000);
+    </script>
+</body>
+</html>
