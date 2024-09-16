@@ -1,5 +1,5 @@
 # Car-with-Aruco-Marker-detection
-This project demonstrates real-time object detection using ArUco markers with a Flask-based web interface for controlling motors, a robotic arm, and aligning objects. The project utilizes a Raspberry Pi with a camera for image capture and processes the feed using Python, OpenCV, and Flask. Servo motors, a robotic arm, and DC motors are controlled via an Arduino over serial communication to facilitate movement, alignment with detected markers, and object manipulation using the robotic arm.
+This project demonstrates real-time object detection using ArUco markers with a Flask-based web interface for controlling motors, a robotic arm, and aligning objects. The project utilizes a Raspberry Pi with a camera for image capture and processes the feed using Python, OpenCV, and Flask. DC motors are controlled via an Arduino over serial communication to facilitate movement, alignment with detected marker. Rasberry Pi with PCA Servo controller control the robotic arm to pick and place the objects.
 
 ## Features:
 
@@ -51,7 +51,7 @@ This project demonstrates real-time object detection using ArUco markers with a 
     g. Adafruit_PCA9685
 
 ## SolidWorks Car Model
-The project includes SolidWorks files for the car design used in this project. The model showcases the design and component placement used for motor control and sensor integration. Design doesnt include tyres used. The prototype used Mecanum wheels.
+The project includes SolidWorks files for the car design used in this project. The model showcases the design and component placement used for motor control. Design doesnt include tyres used. The prototype used 80mm Mecanum wheels.
 
 ## Installation:
 
