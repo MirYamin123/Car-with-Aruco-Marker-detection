@@ -75,7 +75,18 @@ The project includes SolidWorks files for the car design used in this project. T
     
 9. Set the baud rate to 9600 for serial communication with the Raspberry Pi.
 
-10. Run the Flask App
+10.
+    File Structure:
+
+      a. Create a folder for your project.
+
+      b. Place app.py in this folder.
+
+      c. Inside the same folder, create a subfolder named templates.
+
+      d. Inside the templates folder, create a file named index.html.
+
+12. Run the Flask App
     
     `python app.py`
     
