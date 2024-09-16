@@ -1,0 +1,6 @@
+Flask==2.0.1
+Flask-SocketIO==5.1.1
+opencv-python==4.5.3.56
+numpy==1.21.1
+pyserial==3.5
+Adafruit-PCA9685==1.0.1
