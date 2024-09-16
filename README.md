@@ -1,5 +1,5 @@
 # Car-with-Aruco-Marker-detection
-This project demonstrates real-time object detection using ArUco markers with a Flask-based web interface for controlling motors and aligning objects. The project utilizes a Raspberry Pi with a camera for image capture and processes the feed using Python, OpenCV, and Flask. Servo motors and DC motors are controlled via an Arduino over serial communication to facilitate movement and alignment with detected markers.
+This project demonstrates real-time object detection using ArUco markers with a Flask-based web interface for controlling motors, a robotic arm, and aligning objects. The project utilizes a Raspberry Pi with a camera for image capture and processes the feed using Python, OpenCV, and Flask. Servo motors, a robotic arm, and DC motors are controlled via an Arduino over serial communication to facilitate movement, alignment with detected markers, and object manipulation using the robotic arm.
 
 Features:
 
@@ -15,11 +15,13 @@ Features:
 
 6.Failsafe Mechanism: Automatically stops the robot if the marker is lost from view.
 
-Requirements:
+7. Robotic Arm: A mounted robotic arm controlled via servos that can be manipulated to pick up objects.
+
+## Requirements:
 1. Hardware
-   a. Raspberry Pi
+   a. Raspberry Pi 3B+
    
-   b. Arduino UNO (for motor control)
+   b. Arduino UNO R3(for motor control)
    
    c. Servo 995 and DC motors 60RPM 12V
    
@@ -28,6 +30,8 @@ Requirements:
    e. L298d Motor Driver (2x)
    
    f. Camera (Pi Camera)
+
+   g. Robotic Arm mounted on the car, controlled by 4 servo motors (connected to the PCA9685)
    
 3. Software Dependencies
    
@@ -44,6 +48,64 @@ Requirements:
     f. PySerial
   
     g. Adafruit_PCA9685
+
+## SolidWorks Car Model
+The project includes SolidWorks files for the car design used in this project. The model showcases the design and component placement used for motor control and sensor integration. Design doesnt include tyres used. The prototype used Mecanum wheels.
+
+## Installation:
+
+1. Set up the Raspberry Pi and Arduino
+   
+2. Ensure the Raspberry Pi is properly connected to the Pi Camera.
+
+3. Connect the Arduino UNO to control the motors and servos.
+
+4. Wire the PCA9685 Servo Controller and L298D Motor Drivers correctly.
+
+5. To install all required libraries, run:
+
+`pip install -r requirements.txt`
+
+6. Upload Arduino Code.
+
+7. Connect the Arduino UNO to your PC.
+   
+8. Open the Arduino IDE and upload the corresponding motor control code.
+    
+9. Set the baud rate to 9600 for serial communication with the Raspberry Pi.
+
+10. Run the Flask App
+    
+    `python app.py`
+    
+     The app will be accessible at `http://<your_pi_ip>:5000`.
+
+    To find your Raspberry Pi's IP address, run the following command in the terminal:
+
+    ```bash
+    hostname -I
+    ```
+
+    Replace `<your_pi_ip>` with the IP address returned by the command.
+
+
+## How it works:
+
+The Pi camera captures a real-time video stream, which is processed using OpenCV to detect ArUco markers.
+
+Based on the marker's position, the robot can move forward, rotate, or align itself using the motor control code.
+
+The Flask web interface allows remote control of the robot and provides a real-time video feed from the camera.
+
+The robotic arm can be manually controlled through the web interface. Using buttons on the interface, you can control the arm's servos to move it and pick up objects.
+
+
+
+
+
+
+
+
 
 
    
